@@ -1,15 +1,16 @@
-all: boot.bin
+all: boot.flp
 
-kmain.obj:
-	gcc kmain.c -o kmain.obj -c -std=c11
+kmain.bin:
+	nasm -f bin -o kmain.bin kmain.s
 
-boot.obj:
+boot.bin:
 	nasm -f bin -o boot.bin boot.s
 
-boot.bin: boot.obj
-	dd conv=notrunc bs=512 count=1 if=boot.bin of=boot.flp
+boot.flp: boot.bin kmain.bin
+	dd conv=notrunc bs=512 if=kmain.bin of=boot.flp
+	dd conv=notrunc bs=512 skip=1 if=boot.bin of=boot.flp
 	"C:\Program Files\qemu\qemu-system-x86_64.exe" -fda boot.flp
 
 
 clean:
-	rm *.obj *.flp
+	rm *.obj *.flp *.bin
