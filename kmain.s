@@ -1,4 +1,7 @@
-BITS 32
+BITS 16
 
-mov [0xb8000], byte 'A'
-mov [0xb8002], byte 'X'
+mov	ax, 0xb800
+mov	es, ax
+
+mov [es:0x0], byte 'A'
+mov [es:0x1], byte 0x07

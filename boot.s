@@ -6,18 +6,17 @@ start:
 	mov		ax, 0x07C0
 	add		ax, 288
 	mov		ss, ax
-	mov		sp, 4096
+	mov		sp, 0x1000
 	mov		ax, 0x07C0
 	mov		ds, ax
 
-	call	kernel_load
-	hlt
+	jmp 	kernel_load
 
 kernel_load:
 	mov		si, k_load
 	call	print
 	
-	mov		ax, 0x7C0
+	mov		ax, 0x07C0
 	mov		ds, ax
 	mov		ah, 2
 	mov		al, 1
@@ -31,14 +30,14 @@ kernel_load:
 	jnc		.kjump
 	mov		si, k_fail
 	call	print
-	ret
+	hlt
 
 .kjump:
 	mov		si, k_succ
 	call	print
-	jmp		4096:0
+	jmp		0x1000:0
 	
-	ret
+	hlt
 
 data:
 	k_load	db "Initializing Kernel...", 10, 0

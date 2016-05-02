@@ -1,4 +1,4 @@
-all: boot.flp
+all: boot.iso
 
 kmain.bin:
 	nasm -f bin -o kmain.bin kmain.s
@@ -6,11 +6,12 @@ kmain.bin:
 boot.bin:
 	nasm -f bin -o boot.bin boot.s
 
-boot.flp: boot.bin kmain.bin
-	dd conv=notrunc bs=512 if=boot.bin of=boot.flp
-	dd conv=notrunc bs=512 seek=1 if=kmain.bin of=boot.flp
-	"C:\Program Files\qemu\qemu-system-x86_64.exe" -fda boot.flp
-
+boot.iso: boot.bin kmain.bin
+	dd conv=notrunc bs=512 if=boot.bin of=boot.iso
+	dd conv=notrunc bs=512 seek=1 if=kmain.bin of=boot.iso
+	qemu-system-i386 -fda boot.iso
+	rm *.obj *.iso *.bin
 
 clean:
-	rm *.obj *.flp *.bin
+	rm *obj *.iso *.bin
+
